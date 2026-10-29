@@ -3,6 +3,9 @@
 ## Unity Version
 **Unity 6000.6.6f1**
 
+## About the Game
+A 3D top-down isometric dungeon crawler where players explore interconnected rooms, defeat enemies, and solve puzzles to progress through the dungeon.
+
 ## Current Progress
 The camera system is functional but still under development and subject to further improvements.
 
@@ -21,3 +24,10 @@ The current camera functionality can be tested in:
 
 ## Development Status
 The camera system is still being refined. Additional adjustments and improvements may be introduced as development progresses.
+
+## Team Members
+- Marta Gabriela Popescu
+- Vlad Ogrodnic
+- Miruna Alexandra Vișan
+- Alexandru Morteanu
+- Miruna Bianca Maxim
