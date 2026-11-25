@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eef355be50c483a4cb8e2bc4ce0032d0, type: 3}
+  m_Name: FeedbackConfig
+  m_EditorClassIdentifier: Game.Runtime::Game.Feedback.FeedbackConfig
+  _hitFlashMaterial: {fileID: 2100000, guid: 13c9d0bf0c2ea944b96697e61c88551b, type: 2}
+  _hitFlashDuration: 0.08
+  _invulnerabilityBlinkInterval: 0.1

@@ -85,27 +85,27 @@ Scop: primul lucru jucabil. Jucătorul se mișcă, țintește, trage și omoară
 
 Paralel: M1-01 / M1-02 / M1-03 / M1-06 se pot face simultan.
 
-- [ ] **M1-01 Player movement**
+- [x] **M1-01 Player movement**
   `PlayerInputReader`, `PlayerMovement`, `PlayerConfig`. Prefab `Player` (capsulă în `Visual`).
   *Gata când:* jucătorul se mișcă în 8 direcții, cu viteză constantă pe diagonală, se oprește la pereți, nu se rotește și nu cade. Viteza se schimbă din `PlayerConfig`. **GDD:** cap. 3.
 
-- [ ] **M1-02 Player aim**
+- [x] **M1-02 Player aim**
   `PlayerAim` (`IAimProvider`): raycast de la mouse pe planul podelei. Un indicator simplu de direcție în `Visual`.
   *Gata când:* direcția urmează cursorul corect în orice colț al ecranului, la unghiuri de cameră între 60° și 90°. **GDD:** cap. 1, Țintire.
 
-- [ ] **M1-03 Health și damage**
+- [x] **M1-03 Health și damage**
   `Health` (`IDamageable`) cu i-frames opționale și evenimente; `HitFlash` pe `Visual`.
   *Gata când:* teste EditMode/PlayMode: damage scade HP, i-frames blochează damage-ul repetat, la 0 HP se declanșează `Died` o singură dată. Obiectul lovit clipește alb. **GDD:** cap. 3 HP, cap. 4.
 
-- [ ] **M1-04 Atacul ranged și proiectile**
+- [x] **M1-04 Atacul ranged și proiectile**
   `RangedAttack`, `Projectile`, `RangedAttackConfig`; proiectile din pool.
   *Gata când:* cât timp e ținut LMB, jucătorul trage cam 3 proiectile/s spre cursor; proiectilele dispar la obstacole și după bătaia maximă; fac 1 damage inamicilor și nu lovesc jucătorul. **GDD:** cap. 4, Atacul ranged.
 
-- [ ] **M1-05 Inamicul Chaser**
+- [x] **M1-05 Inamicul Chaser**
   `ChaserBehaviour`, `ContactDamage`, `EnemyConfig`. Prefab `Enemy_Chaser`.
   *Gata când:* inamicul merge spre jucător, îi ia 1 HP la contact, moare din 3–4 proiectile. Jucătorul are i-frames ~1 s și knockback mic după lovitură. **GDD:** cap. 4, Damage primit.
 
-- [ ] **M1-06 Camera orthographic pentru un room**
+- [x] **M1-06 Camera orthographic pentru un room**
   `RoomCameraRig`, `CameraConfig`, `CameraFraming` (funcție pură, cu teste).
   *Gata când:* camera orthographic la 75° încadrează tot room-ul la 16:9 și 16:10; unghiul se schimbă din config fără să iasă room-ul din cadru. **GDD:** cap. 1, Camera.
 
