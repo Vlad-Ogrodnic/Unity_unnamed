@@ -18,16 +18,9 @@ namespace Game.Core
         public DamageInfo(int amount, Vector3 direction, float knockbackForce, GameObject source)
         {
             Amount = amount;
-            Direction = FlattenAndNormalize(direction);
+            Direction = PlanarMath.FlattenAndNormalize(direction);
             KnockbackForce = knockbackForce;
             Source = source;
-        }
-
-        /// <summary>Projects a vector onto the XZ plane and normalizes it; returns zero for a vertical or zero vector.</summary>
-        public static Vector3 FlattenAndNormalize(Vector3 direction)
-        {
-            direction.y = 0f;
-            return direction.sqrMagnitude > 1e-8f ? direction.normalized : Vector3.zero;
         }
     }
 }

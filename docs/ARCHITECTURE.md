@@ -116,7 +116,10 @@ public interface IDamageable
 }
 ```
 
-- **`Health`** (MonoBehaviour, implementează `IDamageable`): HP întreg, i-frames opționale, evenimente `Damaged(DamageInfo)`, `Healed(int)`, `Died`. Folosit atât de jucător, cât și de inamici. Valorile vin dintr-un config.
+- **`Health`** (MonoBehaviour, implementează `IDamageable`): HP întreg, i-frames opționale, evenimente `Damaged(DamageInfo)`, `Healed(int)`, `Died`. Folosit atât de jucător, cât și de inamici. Logica stă în `HealthState` (C# simplu, testat). Valorile vin din `HealthConfig`, din care derivă `PlayerConfig` și `EnemyConfig`, ca fiecare personaj să aibă un singur asset de config.
+- **`KnockbackState`**: împingere care scade liniar în timp. Cine se mișcă (jucător, inamici) o folosește în locul mișcării proprii cât e activă.
+- **`DisableOnDeath`**: la `Died` oprește componentele din listă și, opțional, tot obiectul.
+- **`PlanarMath`**: direcții pe XZ și intersecția unei raze cu podeaua. **`PhysicsLayers.CollisionMaskFor(layer)`**: masca de layers din collision matrix, ca query-urile (proiectile) să urmeze matricea fără măști duplicate în config.
 - **`IAimProvider`**: `Vector3 AimDirection` (normalizat, pe XZ) și `Vector3 AimPoint` (punctul de pe podea). Jucătorul îl implementează cu mouse-ul; inamicii care trag pot avea propria implementare. Atacurile depind doar de această interfață, deci modul de țintire se poate schimba fără a atinge armele.
 - **`IInteractable`**: `string Prompt`, `bool CanInteract(PlayerContext)`, `void Interact(PlayerContext)`.
 - **Pooling:** proiectilele și efectele frecvente folosesc `PrefabPool<T>` (peste `UnityEngine.Pool.ObjectPool<T>`). Cine creează pool-ul le dă instanțelor un callback de `Release`; instanțele nu știu de pool.
@@ -129,14 +132,14 @@ public interface IDamageable
 ### Player
 - `PlayerInputReader`: singurul loc care citește Input System. Expune valori (`Move`, `AimScreenPosition`) și evenimente (`MeleePressed`, `BombPressed/Released`, `PotionPressed`, `InteractPressed`). Restul componentelor nu știu de Input System.
 - `PlayerMovement`: mișcare pe Rigidbody (velocity, interpolare), viteza din `PlayerConfig`.
-- `PlayerAim` (`IAimProvider`): raycast de la mouse pe planul podelei.
+- `PlayerAim` (`IAimProvider`): raycast de la mouse pe planul podelei. Primește camera prin Inspector sau `SetCamera` (de la cine creează jucătorul).
 - `PlayerInventory`: coins, potions, bombe, cu limite și evenimente `Changed`.
 - `PlayerInteractor`: găsește cel mai apropiat `IInteractable`, afișează prompt-ul, apelează `Interact` la F.
 - `PlayerStats`: valorile curente (damage, fire rate, viteză...) = config de bază + modificatori de la items/Forge.
 
 ### Combat
-- `RangedAttack`: trage cât timp e ținut apăsat, după rata de tragere din stats; ia proiectile din pool.
-- `Projectile`: se mișcă singur, verifică coliziunea cu `SphereCast` în direcția mișcării (sigur la viteze mari), lovește primul `IDamageable` de pe echipa opusă sau dispare la obstacol / la bătaia maximă.
+- `RangedAttack`: trage cât timp `TriggerHeld` e true, după rata de tragere din config (mai târziu din stats); ia proiectile din pool. Nu știe de input: la jucător, `PlayerAttackInput` leagă input-ul de atacuri; un inamic care trage va seta singur `TriggerHeld`.
+- `Projectile`: se mișcă singur, verifică coliziunea cu `SphereCast` în direcția mișcării (sigur la viteze mari), lovește primul `IDamageable` sau dispare la obstacol / la bătaia maximă. Ce poate lovi vine din collision matrix pentru layer-ul lui (`PlayerProjectile` / `EnemyProjectile`). Valorile (damage, viteză, bătaie) vin ca `ProjectileStats`, construite de atac.
 - `MeleeAttack`: arc în fața aim-ului (`OverlapSphere` + filtru de unghi), damage + knockback, cooldown propriu.
 - `BombThrower` + `Bomb`: cerc de aterizare cât e ținută tasta; zbor în arc calculat (lerp pe XZ + parabolă pe Y), umbră pe podea, explozie cu `OverlapSphere` care lovește `IDamageable` și distruge `DestructibleObstacle`.
 
@@ -153,7 +156,8 @@ public interface IDamageable
 
 ### Camera
 - `RoomCameraRig`: camera orthographic la unghiul din config. Când jucătorul intră într-un room, calculează mărimea orthographic și poziția din bounds-ul room-ului și face tranziția.
-- Calculul încadrării e o funcție pură (`CameraFraming.Compute(bounds, angle, aspect)`), cu teste.
+- Calculul încadrării e o funcție pură (`CameraFraming.Compute(playArea, roomArea, pitch, aspect, distance)`), cu teste. Regula: podeaua pe care se poate merge (`playArea`) se vede mereu toată; în rest room-ul cu tot cu pereți (`roomArea`) umple ecranul, deci se taie doar marginea exterioară a pereților. Fundalul apare doar când forma ecranului nu permite ambele (de exemplu 4:3).
+- Rig-ul recalculează în fiecare frame, deci unghiul din `CameraConfig` și redimensionarea ferestrei se aplică pe loc. Până la M3-01, room-ul inițial se dă prin două collidere în scenă (`PlayArea` și `Floor`).
 
 ### Items, economie, run
 - `ItemDefinition` (ScriptableObject): nume, descriere, raritate, listă de `StatModifier`. Efectele mai speciale se adaugă abia când apar în listă.
