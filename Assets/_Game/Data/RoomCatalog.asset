@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1c541cd6a09b3a4d88b16f5da488dc3, type: 3}
+  m_Name: RoomCatalog
+  m_EditorClassIdentifier: Game.Runtime::Game.Dungeon.RoomCatalog
+  _startRooms:
+  - {fileID: 158690238559955575, guid: ca7d4f232e226e646a6b3d0ad042d72d, type: 3}
+  _combatRooms:
+  - {fileID: 8176878395366080032, guid: bd152d4f4821f594abcb1c4388dff9b0, type: 3}
+  - {fileID: 8141982893178540804, guid: 7ad878e150bb3e04294e1fe25b25511d, type: 3}
+  - {fileID: 4880562410446967268, guid: a3f44f7e4c270524baafb03296771425, type: 3}
+  - {fileID: 8674024078119293495, guid: 4c179d92303959f49a0dc986c9845c10, type: 3}
+  - {fileID: 3752464027733641564, guid: 9c47be5801a49834ea8013f51cdcb1d4, type: 3}
+  - {fileID: 2738889255911439096, guid: 64dcb79c03ba5b543bcac626c61223c6, type: 3}
+  - {fileID: 50527538291256187, guid: 27b6d44b30393d7429e519e6e9184f33, type: 3}

@@ -5,7 +5,7 @@ namespace Game.Enemies
 {
     /// <summary>Walks straight at its target. The room (or the scene, for now) gives it the target.</summary>
     [RequireComponent(typeof(Rigidbody))]
-    public sealed class ChaserBehaviour : MonoBehaviour
+    public sealed class ChaserBehaviour : MonoBehaviour, IEnemyBehaviour
     {
         private enum State
         {

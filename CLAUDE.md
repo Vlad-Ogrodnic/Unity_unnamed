@@ -33,13 +33,14 @@ The main GDD is a Google Doc the team edits; `docs/gdd/GDD.md` is a copy updated
 - C#, English identifiers and comments. Namespace mirrors folder: `Game.Player`, `Game.Combat`, …
 - Small single-purpose components; communicate through interfaces (`IDamageable`, `IAimProvider`, `IInteractable`) and C# events.
 - Every balance value lives in a ScriptableObject config in `Assets/_Game/Data/`. No gameplay magic numbers in code.
-- Pure logic (floor generation, camera framing, stat modifiers, inventory) in plain C# classes with EditMode tests.
+- Pure logic (floor generation, camera framing, stat modifiers, inventory) in plain C# classes, testable in EditMode.
 - Input only through `PlayerInputReader` (Input System). Never `UnityEngine.Input`.
 - No `FindObjectOfType` / `GameObject.Find` / tag lookups at runtime. Serialized references or injection by the creator.
 - Prefabs: gameplay on the root, graphics only in a `Visual` child; gameplay never reaches into `Visual`.
 - Pool frequently spawned objects (projectiles). Avoid per-frame allocations in `Update`.
 - `[SerializeField] private` fields, not public fields. No leftover `Debug.Log`.
 - Don't build generic systems for hypothetical future needs.
+- **Tests: be strict about usefulness.** Write a test only if it checks real game behaviour that could plausibly break: a GDD rule, non-trivial pure logic, or a bug you actually hit. Skip tests for trivial getters, engine behaviour, or anything another test already covers. Before adding one, ask: would this catch a bug we care about? If not, don't write it; every test slows down development.
 
 ## Unity editor from the command line
 

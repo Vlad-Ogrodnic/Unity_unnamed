@@ -153,16 +153,20 @@ Secțiunea descrie și sisteme care vin **după MVP** sau care sunt **încă ned
 - Inamicul nu își caută singur ținta: `Room` îi dă referința la jucător când îl activează.
 
 ### Rooms și Dungeon
-- `Room`: bounds (pentru cameră), lista de uși, punctele de spawn, starea (`Unvisited → Active → Cleared`), evenimentele `PlayerEntered`, `Cleared`. Când jucătorul intră într-un room necurățat: închide ușile, activează inamicii; când moare ultimul: deschide ușile, dă drop-ul.
-- `Door`: deschis / închis, direcția (N/E/S/W), legătura cu room-ul vecin.
+- `RoomGrid`: dimensiunile fixe ale grid-ului: o celulă are 20 × 12 m cu pereți (podea 18 × 10), pereți de 1 m, uși de 2 m la mijlocul fiecărei laturi de celulă.
+- `Room`: bounds (pentru cameră), lista de uși, inamicii (copii inactivi până intră jucătorul), starea (`Unvisited → Active → Cleared`), evenimentele `PlayerEntered`, `Cleared`. Collider-ul trigger al room-ului (layer `RoomTrigger`) detectează jucătorul. Când jucătorul intră într-un room necurățat: închide ușile, activează inamicii și le dă ținta prin `IEnemyBehaviour.SetTarget`; când moare ultimul: deschide ușile, dă drop-ul (`RoomConfig`).
+- `Door`: o ușă pe fiecare latură de celulă. `Sealed` (fără vecin, arată ca perete), `Open` sau `Closed`; cine construiește etajul apelează `Connect()`. Grafica e pe `Visual` (`DoorVisual`).
+- **Layout-uri de rooms ca text** (`Data/RoomLayouts/Room_*.txt`, format în README-ul de acolo): `RoomLayout` le citește, `RoomLayoutValidator` verifică regulile (uși libere, tot room-ul accesibil, inamici departe de uși), iar unealta de editor `RoomPrefabBuilder` (**Game → Rooms → Rebuild Room Prefabs**) generează prefab-urile din `Prefabs/Rooms/`. Prefab-urile nu se editează de mână. Caracterul `X` e rezervat pentru obstacole distructibile.
 - `FloorLayoutGenerator` (C# pur, seed explicit, `System.Random`): produce un `FloorLayout` = grid de celule; fiecare room ocupă 1×1, 2×1, 1×2 sau 2×2 celule și are un tip, plus conexiunile dintre rooms vecine. Tipuri: Start, Combat, Boss, Choice, Forge (în M3 doar Start și Combat; restul în M4). Are teste EditMode (toate rooms accesibile, exact un start room, fără suprapuneri, determinism pe același seed).
-- `FloorBuilder`: transformă `FloorLayout` în scenă, alegând template-uri de rooms de mărimea potrivită (prefabs cu `Room`).
+- Generatorul crește etajul din start room: alege un room deja pus și una din ușile lui, apoi pune în spate un room de mărime aleasă după ponderile din `FloorGenerationConfig`. Un room nou poate atinge cel mult 2 rooms existente, ca etajul să se ramifice în loc să se adune grămadă. Toate perechile de rooms vecine primesc ușă între ele, deci pot apărea bucle.
+- `FloorBuilder`: transformă `FloorLayout` în scenă, alegând template-uri de mărimea potrivită din `RoomCatalog` (completat automat de rebuild-ul de rooms; layout-urile `Room_Start*` sunt start rooms). Conectează ușile, înregistrează rooms la cameră, pune jucătorul în start room și anunță `FloorBuilt`. Mărimile fără template sunt sărite.
 
 ### Camera
 - `RoomCameraRig`: camera orthographic la unghiul din config. Când jucătorul intră într-un room, calculează mărimea orthographic și poziția din bounds-ul room-ului și face tranziția.
 - Calculul încadrării e o funcție pură (`CameraFraming.Compute(playArea, roomArea, pitch, aspect, distance)`), cu teste. Regula: podeaua pe care se poate merge (`playArea`) se vede mereu toată; în rest room-ul cu tot cu pereți (`roomArea`) umple ecranul, deci se taie doar marginea exterioară a pereților. Fundalul apare doar când forma ecranului nu permite ambele (de exemplu 4:3).
 - Rig-ul recalculează în fiecare frame, deci unghiul din `CameraConfig` și redimensionarea ferestrei se aplică pe loc. Până la M3-01, room-ul inițial se dă prin două collidere în scenă (`PlayArea` și `Floor`).
-- În rooms mai mari decât ecranul (2×1, 1×2, 2×2), camera urmărește jucătorul în limitele room-ului (M3-04).
+- În rooms mai mari decât ecranul (2×1, 1×2, 2×2), camera păstrează scara unui room 1×1 și urmărește jucătorul în limitele room-ului (`CameraFraming.ComputeFollow`).
+- `RoomCameraRig` ascultă `Room.PlayerEntered` (rooms din scenă prin Inspector, cele generate prin `Register`) și face o tranziție lină (`CameraConfig.RoomTransitionDuration`).
 
 ### Items, economie, run
 - `ItemDefinition` (ScriptableObject): nume, descriere, raritate, listă de `StatModifier`. Efectele mai speciale se adaugă abia când apar în listă.
@@ -177,7 +181,8 @@ Secțiunea descrie și sisteme care vin **după MVP** sau care sunt **încă ned
 - `HitFlash` stă pe `Visual` și face flash alb când `Health` de pe root anunță damage. Așa, echipa de artă poate schimba grafica fără să atingă logica. Efectele care schimbă renderere (`HitFlash`, `InvulnerabilityBlink`, `TelegraphBlink`) primesc lista de renderere în Inspector (gol = toate din `Visual`), prin `RendererFlash`.
 - `HitStop` (unul pe scenă) oprește timpul câteva frames; `ScreenShake` stă pe cameră și rulează după rig. `ImpactFeedback` le declanșează la `MeleeAttack.Hit`. Efectele vizuale folosesc timp real (`unscaledTime`), ca să meargă și în hit stop.
 - `ProvisionalDeathScreen` (M2-02, IMGUI) e temporar și se înlocuiește în M4-07.
-- UI-ul se abonează la evenimente (`PlayerInventory.Changed`, `Health.Damaged`) și nu modifică starea jocului.
+- UI-ul se abonează la evenimente (`PlayerInventory.Changed`, `Health.Damaged`) și nu modifică starea jocului. UI-ul de joc e uGUI (Canvas cu `CanvasScaler` la 1920 × 1080).
+- `MinimapView` (în HUD, sus-dreapta) desenează etajul din `FloorBuilt` și se actualizează la `Room.PlayerEntered`; ce se vede decide `MinimapState` (vizitate, curent, vecini descoperiți).
 
 ---
 
@@ -189,6 +194,8 @@ Secțiunea descrie și sisteme care vin **după MVP** sau care sunt **încă ned
 ---
 
 ## 8. Teste
+
+- Un test se scrie doar dacă verifică un comportament real care se poate strica: o regulă din GDD, logică pură netrivială sau un bug întâlnit. Fără teste pentru getters triviali, comportamentul engine-ului sau lucruri deja acoperite de alt test.
 
 - **EditMode** pentru logica pură: generarea etajului, încadrarea camerei, stats cu modificatori, inventarul.
 - **PlayMode** doar pentru câteva scenarii critice (proiectilul face damage, ușile se deschid după ce mor inamicii), când se stabilizează sistemele.

@@ -55,13 +55,24 @@ namespace Game.Tests.EditMode
         }
 
         [Test]
-        public void ChangingPitch_UsesThatPitch()
+        public void BigRoom_FollowsThePlayer_ButNeverShowsPastTheWalls()
         {
-            for (float pitch = 60f; pitch <= 90f; pitch += 2.5f)
+            const float aspect = 16f / 9f;
+            var bigRoom = new Bounds(Vector3.zero, new Vector3(40f, 0f, 24f)); // 2x2 cells
+            float size = CameraFraming.Compute(PlayArea, RoomArea, 75f, aspect, 30f).OrthographicSize;
+
+            // Player in the middle: view centred on the player.
+            CameraFrame middle = CameraFraming.ComputeFollow(bigRoom, Vector3.zero, size, 75f, aspect, 30f);
+            Assert.That(Mathf.Abs(ToCameraSpace(middle, Vector3.zero).x), Is.LessThan(Tolerance));
+
+            // Player in a corner: the view stops at the walls.
+            CameraFrame corner = CameraFraming.ComputeFollow(bigRoom, new Vector3(19f, 0f, 11f), size, 75f, aspect, 30f);
+            foreach (Vector2 c in new[] { new Vector2(-1f, -1f), new Vector2(1f, -1f), new Vector2(-1f, 1f), new Vector2(1f, 1f) })
             {
-                CameraFrame frame = CameraFraming.Compute(PlayArea, RoomArea, pitch, 16f / 9f, 30f);
-                Assert.That(frame.OrthographicSize, Is.GreaterThan(0f));
-                Assert.That(Quaternion.Angle(frame.Rotation, Quaternion.Euler(pitch, 0f, 0f)), Is.LessThan(1e-3f));
+                Vector3 origin = corner.Position + corner.Rotation * new Vector3(c.x * size * aspect, c.y * size, 0f);
+                PlanarMath.TryIntersectHorizontalPlane(new Ray(origin, corner.Rotation * Vector3.forward), 0f, out Vector3 p);
+                Assert.That(Mathf.Abs(p.x), Is.LessThanOrEqualTo(bigRoom.extents.x + Tolerance));
+                Assert.That(Mathf.Abs(p.z), Is.LessThanOrEqualTo(bigRoom.extents.z + Tolerance));
             }
         }
 

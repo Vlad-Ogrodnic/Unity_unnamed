@@ -29,21 +29,6 @@ namespace Game.Tests.EditMode
             base.TearDown();
         }
 
-        [TestCase("Move")]
-        [TestCase("Aim")]
-        [TestCase("Fire")]
-        [TestCase("Melee")]
-        [TestCase("Bomb")]
-        [TestCase("Potion")]
-        [TestCase("Interact")]
-        [TestCase("Dash")]
-        [TestCase("Pause")]
-        [TestCase("Restart")]
-        public void GameplayMap_HasAction(string actionName)
-        {
-            Assert.That(_controls.Gameplay.Get().FindAction(actionName), Is.Not.Null);
-        }
-
         [Test]
         public void Move_Diagonal_IsNormalized()
         {

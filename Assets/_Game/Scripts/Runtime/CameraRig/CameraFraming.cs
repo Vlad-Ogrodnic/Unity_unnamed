@@ -50,6 +50,31 @@ namespace Game.CameraRig
             return new CameraFrame(lookAt - forward * distance, rotation, size);
         }
 
+        /// <summary>
+        /// Framing for a room bigger than the screen: the view keeps <paramref name="orthographicSize"/>,
+        /// centres on <paramref name="focus"/> (the player) and is clamped so it never shows past the
+        /// room's edges. On an axis where the room is smaller than the view, it stays centred on the room.
+        /// </summary>
+        public static CameraFrame ComputeFollow(Bounds roomArea, Vector3 focus, float orthographicSize, float pitchDegrees, float aspect, float distance)
+        {
+            Quaternion rotation = Quaternion.Euler(pitchDegrees, 0f, 0f);
+            Vector3 right = rotation * Vector3.right;
+            Vector3 up = rotation * Vector3.up;
+            Vector3 forward = rotation * Vector3.forward;
+
+            Project(roomArea, right, up, out Vector2 roomMin, out Vector2 roomMax);
+            float halfWidth = orthographicSize * aspect;
+            var centre = new Vector2(Vector3.Dot(focus, right), Vector3.Dot(focus, up));
+            centre.x = ClampOrMid(centre.x, roomMin.x + halfWidth, roomMax.x - halfWidth);
+            centre.y = ClampOrMid(centre.y, roomMin.y + orthographicSize, roomMax.y - orthographicSize);
+
+            Vector3 lookAt = right * centre.x + up * centre.y + forward * Vector3.Dot(roomArea.center, forward);
+            return new CameraFrame(lookAt - forward * distance, rotation, orthographicSize);
+        }
+
+        private static float ClampOrMid(float value, float min, float max) =>
+            min <= max ? Mathf.Clamp(value, min, max) : (min + max) * 0.5f;
+
         /// <summary>Extents of a box's 8 corners along the camera's right (x) and up (y) axes.</summary>
         private static void Project(Bounds bounds, Vector3 right, Vector3 up, out Vector2 min, out Vector2 max)
         {

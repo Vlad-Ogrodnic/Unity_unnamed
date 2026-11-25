@@ -163,7 +163,7 @@ Un issue e „Done” când:
 
 - [ ] codul compilează **fără erori și fără warning-uri noi**
 - [ ] feature-ul a fost testat manual în scena sandbox, conform criteriilor de acceptare
-- [ ] logica pură (generare dungeon, calcule de statistici etc.) are **teste EditMode** unde e posibil
+- [ ] logica pură (generare dungeon, calcule de statistici etc.) are **teste EditMode** acolo unde testul verifică ceva util (vezi ARCHITECTURE §8)
 - [ ] nu există modificări accidentale în scene comune / `ProjectSettings/`
 - [ ] PR-ul are descriere cu „cum se testează”
 - [ ] PR-ul a fost făcut merge în `main` (și issue-ul s-a închis, dacă există)
