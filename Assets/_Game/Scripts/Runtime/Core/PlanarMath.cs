@@ -28,6 +28,19 @@ namespace Game.Core
             return delta.sqrMagnitude > Epsilon ? delta.normalized : fallback;
         }
 
+        /// <summary>
+        /// True if <paramref name="toTarget"/> lies within an arc of <paramref name="arcDegrees"/>
+        /// centred on <paramref name="forward"/> (both measured on XZ). A zero offset counts as inside.
+        /// </summary>
+        public static bool IsWithinArc(Vector3 forward, Vector3 toTarget, float arcDegrees)
+        {
+            Vector3 flatTarget = Flatten(toTarget);
+            if (flatTarget.sqrMagnitude <= Epsilon)
+                return true;
+
+            return Vector3.Angle(Flatten(forward), flatTarget) <= arcDegrees * 0.5f;
+        }
+
         /// <summary>Where a ray crosses the horizontal plane at height <paramref name="planeY"/>, if it does in front of its origin.</summary>
         public static bool TryIntersectHorizontalPlane(Ray ray, float planeY, out Vector3 point)
         {

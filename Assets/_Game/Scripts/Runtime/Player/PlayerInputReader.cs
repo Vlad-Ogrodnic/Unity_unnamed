@@ -25,6 +25,9 @@ namespace Game.Player
         public event Action DashPressed;
         public event Action PausePressed;
 
+        /// <summary>Provisional (M2-02): R on the temporary death screen. Removed with the real end screen (M4-07).</summary>
+        public event Action RestartPressed;
+
         private void Awake()
         {
             _controls = new GameControls();
@@ -40,6 +43,7 @@ namespace Game.Player
             gameplay.Interact.performed += OnInteract;
             gameplay.Dash.performed += OnDash;
             gameplay.Pause.performed += OnPause;
+            gameplay.Restart.performed += OnRestart;
             gameplay.Enable();
         }
 
@@ -54,6 +58,7 @@ namespace Game.Player
             gameplay.Interact.performed -= OnInteract;
             gameplay.Dash.performed -= OnDash;
             gameplay.Pause.performed -= OnPause;
+            gameplay.Restart.performed -= OnRestart;
 
             Move = Vector2.zero;
             FireHeld = false;
@@ -79,5 +84,6 @@ namespace Game.Player
         private void OnInteract(InputAction.CallbackContext _) => InteractPressed?.Invoke();
         private void OnDash(InputAction.CallbackContext _) => DashPressed?.Invoke();
         private void OnPause(InputAction.CallbackContext _) => PausePressed?.Invoke();
+        private void OnRestart(InputAction.CallbackContext _) => RestartPressed?.Invoke();
     }
 }

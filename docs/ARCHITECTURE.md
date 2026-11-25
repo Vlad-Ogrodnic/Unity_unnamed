@@ -132,21 +132,23 @@ public interface IDamageable
 Secțiunea descrie și sisteme care vin **după MVP** sau care sunt **încă nedecise** (marcate așa), ca să fie clar unde vor sta; nu se implementează înainte de task-ul lor din [FEATURE_PLAN.md](FEATURE_PLAN.md).
 
 ### Player
-- `PlayerInputReader`: singurul loc care citește Input System. Expune valori (`Move`, `AimScreenPosition`) și evenimente (`MeleePressed`, `BombPressed/Released`, `PotionPressed`, `InteractPressed`). Restul componentelor nu știu de Input System.
+- `PlayerInputReader`: singurul loc care citește Input System. Expune valori (`Move`, `AimScreenPosition`) și evenimente (`MeleePressed`, `BombPressed/Released`, `PotionPressed`, `InteractPressed`; provizoriu `RestartPressed` pentru ecranul de moarte din M2-02, scos în M4-07). Rămâne activ după moarte. Restul componentelor nu știu de Input System.
 - `PlayerMovement`: mișcare pe Rigidbody (velocity, interpolare), viteza din `PlayerConfig`.
 - `PlayerAim` (`IAimProvider`): raycast de la mouse pe planul podelei. Primește camera prin Inspector sau `SetCamera` (de la cine creează jucătorul).
-- `PlayerInventory`: potions (max 3), cu limite și eveniment `Changed`. Coins se adaugă în M4-02; bombele doar dacă intră în MVP.
+- `PlayerInventory`: potions (max 3, gol la start), cu limite și eveniment `Changed`; logica în `InventoryState` (testat). `PlayerPotionUse` bea la Q: refuză cu HP plin sau fără potions și anunță `UseFailed` (feedback: `DeniedShake` pe `Visual`). Coins se adaugă în M4-02; bombele doar dacă intră în MVP.
 - `PlayerInteractor`: găsește cel mai apropiat `IInteractable`, afișează prompt-ul, apelează `Interact` la F.
 - `PlayerStats`: valorile curente (damage, fire rate, viteză...) = config de bază + modificatori de la items/Forge.
 
 ### Combat
 - `RangedAttack`: trage cât timp `TriggerHeld` e true, după rata de tragere din config (mai târziu din stats); ia proiectile din pool. Nu știe de input: la jucător, `PlayerAttackInput` leagă input-ul de atacuri; un inamic care trage va seta singur `TriggerHeld`.
 - `Projectile`: se mișcă singur, verifică coliziunea cu `SphereCast` în direcția mișcării (sigur la viteze mari), lovește primul `IDamageable` sau dispare la obstacol / la bătaia maximă. Ce poate lovi vine din collision matrix pentru layer-ul lui (`PlayerProjectile` / `EnemyProjectile`). Valorile (damage, viteză, bătaie) vin ca `ProjectileStats`, construite de atac.
-- `MeleeAttack`: arc în fața aim-ului (`OverlapSphere` + filtru de unghi), damage + knockback, cooldown propriu.
+- `MeleeAttack`: arc în fața aim-ului (`OverlapSphere` + `PlanarMath.IsWithinArc`), damage + knockback la toți `IDamageable` din echipa opusă, cooldown propriu. Evenimente: `Swung(direction)` pentru grafică (`MeleeSwingVisual`) și `Hit(count)` pentru hit stop și screen shake.
 - `BombThrower` + `Bomb` (de decis dacă intră în MVP): cerc de aterizare cât e ținută tasta; zbor în arc calculat (lerp pe XZ + parabolă pe Y), umbră pe podea, explozie cu `OverlapSphere` care lovește `IDamageable` și distruge `DestructibleObstacle`.
 
 ### Enemies
 - Fiecare inamic: `Health` + `ContactDamage` + **un** component de comportament (`ChaserBehaviour`, `ShooterBehaviour`, `ChargerBehaviour`; `TurretBehaviour` după MVP) + `EnemyConfig`.
+- Tipurile cu valori proprii își extind config-ul: `ShooterConfig` și `ChargerConfig` derivă din `EnemyConfig`.
+- `ShooterBehaviour` e și `IAimProvider` pentru propriul `RangedAttack` (proiectile pe layer-ul `EnemyProjectile`). `ChargerBehaviour` anunță `TelegraphStarted(direction)` / `TelegraphEnded`; pe `Visual`, `TelegraphBlink` clipește și `ChargeDirectionIndicator` arată o săgeată pe podea.
 - Comportamentele sunt mașini de stări mici, scrise direct în cod (enum + switch). Fără NavMesh în MVP: rooms sunt mici, mișcarea directă spre jucător + ocolire simplă e suficientă.
 - Inamicul nu își caută singur ținta: `Room` îi dă referința la jucător când îl activează.
 
@@ -172,7 +174,9 @@ Secțiunea descrie și sisteme care vin **după MVP** sau care sunt **încă ned
 ## 6. Feedback și UI
 
 - Feedback-ul (hit flash, hit stop, screen shake, sunete) **ascultă evenimente** (`Health.Damaged`, lovitura melee, `Bomb.Exploded` dacă bombele intră). Gameplay-ul nu apelează direct efecte.
-- `HitFlash` stă pe `Visual` și face flash alb când `Health` de pe root anunță damage. Așa, echipa de artă poate schimba grafica fără să atingă logica.
+- `HitFlash` stă pe `Visual` și face flash alb când `Health` de pe root anunță damage. Așa, echipa de artă poate schimba grafica fără să atingă logica. Efectele care schimbă renderere (`HitFlash`, `InvulnerabilityBlink`, `TelegraphBlink`) primesc lista de renderere în Inspector (gol = toate din `Visual`), prin `RendererFlash`.
+- `HitStop` (unul pe scenă) oprește timpul câteva frames; `ScreenShake` stă pe cameră și rulează după rig. `ImpactFeedback` le declanșează la `MeleeAttack.Hit`. Efectele vizuale folosesc timp real (`unscaledTime`), ca să meargă și în hit stop.
+- `ProvisionalDeathScreen` (M2-02, IMGUI) e temporar și se înlocuiește în M4-07.
 - UI-ul se abonează la evenimente (`PlayerInventory.Changed`, `Health.Damaged`) și nu modifică starea jocului.
 
 ---
