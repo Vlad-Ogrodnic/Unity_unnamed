@@ -1,6 +1,6 @@
 # Feature plan
 
-Lista de lucru pentru MVP, împărțită pe milestones, în ordinea din GDD cap. 13. Fiecare task devine un GitHub issue cu același ID în titlu (de exemplu `[M1-03] Player aim`).
+Lista de lucru pentru MVP, împărțită pe milestones, în ordinea din GDD cap. 13. Ce e încă nedecis stă în **De decis înainte de MVP**, iar ce am scos din MVP în **După MVP**, la final.
 
 **Cum se citește un task**
 - **Depinde de:** ce trebuie să fie gata înainte.
@@ -8,30 +8,15 @@ Lista de lucru pentru MVP, împărțită pe milestones, în ordinea din GDD cap.
 - **GDD:** capitolul cu regulile de design.
 - Detaliile tehnice (ce clase, unde stau) sunt în [ARCHITECTURE.md](ARCHITECTURE.md).
 
-**Status:** `[ ]` de făcut · `[~]` în lucru · `[x]` gata. Când trecem pe GitHub Issues, statusul se ține acolo, iar aici rămâne doar lista.
+**Status:** `[ ]` de făcut · `[~]` în lucru · `[x]` gata. Se bifează aici și în checklist-ul issue-ului.
+
+**ID-urile nu se renumerotează.** Un task scos din MVP își păstrează ID-ul și se mută în secțiunea **După MVP**, ca să rămână valabile referințele din issues, branch-uri și commit-uri.
 
 ## Issues pe GitHub
 
-Un issue acoperă un **sistem întreg** (mai multe task-uri de mai jos); task-urile apar ca checklist în issue. Fiecare issue corespunde în mare unui folder din ARCHITECTURE, ca oamenii care lucrează în paralel să nu modifice aceleași fișiere.
+Un issue pe milestone, cu task-urile ca checklist (titlu: `[M2] Lupta completă`), în milestone-ul GitHub cu același nume. PR-ul care termină milestone-ul închide issue-ul (`Closes #<nr>`).
 
-| # | Issue | Task-uri | Milestone |
-|---|---|---|---|
-| 1 | Fundația proiectului | M0-01…05 | M0 |
-| 2 | Player: input, mișcare, aim | M1-01, M1-02 | M1 |
-| 3 | Health, damage și atacul ranged | M1-03, M1-04 | M1 |
-| 4 | Camera orthographic | M1-06, M3-04 | M1 |
-| 5 | Inamici: Chaser, Shooter, Charger, Turret | M1-05, M2-06…08 | M1–M2 |
-| 6 | Kit de luptă: melee, bombe, obstacole distructibile | M2-01, M2-04, M2-05 | M2 |
-| 7 | Inventar, potions, pickups, moarte și restart | M2-02, M2-03 | M2 |
-| 8 | Hit feedback: flash, hit stop, screen shake | M2-09 | M2 |
-| 9 | Rooms și uși + template-uri | M3-01, M3-05 | M3 |
-| 10 | Generarea etajului + minimap | M3-02, M3-03, M3-06 | M3 |
-| 11 | Items și economie: stats, coins, choice room, Forge | M4-02…05 | M4 |
-| 12 | Run complet: RunManager, 3 etaje, HUD, meniuri (+ boss opțional) | M4-01, M4-06…08 | M4 |
-
-Issues se creează pe GitHub pe măsură ce ajungem la milestone-ul lor. Numerele din tabel sunt orientative; contează numărul real de pe GitHub.
-
-**Paralelizare:** în fiecare milestone, task-urile fără dependențe între ele pot fi luate de oameni diferiți. Sunt marcate în tabelul de la începutul fiecărui milestone.
+**Paralelizare:** în fiecare milestone, task-urile fără dependențe între ele pot fi luate de oameni diferiți. Sunt marcate sub tabelul fiecărui milestone.
 
 ---
 
@@ -90,7 +75,7 @@ Paralel: M1-01 / M1-02 / M1-03 / M1-06 se pot face simultan.
   *Gata când:* jucătorul se mișcă în 8 direcții, cu viteză constantă pe diagonală, se oprește la pereți, nu se rotește și nu cade. Viteza se schimbă din `PlayerConfig`. **GDD:** cap. 3.
 
 - [x] **M1-02 Player aim**
-  `PlayerAim` (`IAimProvider`): raycast de la mouse pe planul podelei. Un indicator simplu de direcție în `Visual`.
+  `PlayerAim` (`IAimProvider`): raycast de la mouse pe planul podelei. Un indicator simplu de direcție în `Visual` (ascuns deocamdată: `AimPivot` e dezactivat în prefab).
   *Gata când:* direcția urmează cursorul corect în orice colț al ecranului, la unghiuri de cameră între 60° și 90°. **GDD:** cap. 1, Țintire.
 
 - [x] **M1-03 Health și damage**
@@ -115,59 +100,55 @@ Paralel: M1-01 / M1-02 / M1-03 / M1-06 se pot face simultan.
 
 ## M2 · Lupta completă
 
-Scop: tot kit-ul jucătorului și cele 4 tipuri de inamici, într-un singur room.
+Scop: kit-ul de luptă al jucătorului din MVP și cele 3 tipuri de inamici, într-un singur room.
 
 | ID | Task | Depinde de |
 |---|---|---|
 | M2-01 | Atacul melee | M1-02, M1-03 |
-| M2-02 | Moartea jucătorului și restart | M1-03 |
+| M2-02 | Moartea jucătorului și restart (provizoriu) | M1-03 |
 | M2-03 | Inventar, potions, pickups automate | M1-03 |
-| M2-04 | Bombe | M1-02, M1-03, M2-03 |
-| M2-05 | Obstacole distructibile | M1-03 |
 | M2-06 | Inamicul Shooter | M1-04, M1-05 |
 | M2-07 | Inamicul Charger | M1-05 |
-| M2-08 | Inamicul Turret | M1-04 |
 | M2-09 | Hit stop și screen shake | M1-03 |
 
-Paralel: melee / inventar / inamici / feedback sunt independente.
+Paralel: melee / inventar / inamici / feedback sunt independente. (M2-04 și M2-05 sunt la **De decis**, M2-08 în **După MVP**.)
 
-- [ ] **M2-01 Atacul melee:** arc de ~120° spre aim, ~3× damage-ul unui proiectil, knockback, cooldown ~0,8 s, separat de ranged. *Gata când:* lovește doar inamicii din arc, îi împinge, cooldown-ul se respectă. **GDD:** cap. 4.
-- [ ] **M2-02 Moartea jucătorului și restart:** la 0 HP jocul se oprește și apare un ecran simplu „Ai murit — R pentru restart”. *Gata când:* restart-ul readuce room-ul la starea inițială.
-- [ ] **M2-03 Inventar, potions, pickups automate:** `PlayerInventory` (coins, potions max 3, bombe), `Pickup`. Q bea un potion (+2 HP, instant, fără încetinire). *Gata când:* pickup-urile se iau la atingere doar dacă e loc; potion-ul nu trece de HP maxim; teste EditMode pentru inventar. **GDD:** cap. 3, Healing; Controale.
-- [ ] **M2-04 Bombe:** `BombThrower`, `Bomb`, `BombConfig`. *Gata când:* cât e ținut E apare cercul de aterizare (limitat la distanța maximă); la eliberare bomba zboară în arc peste obstacole, cu umbră pe podea, și explodează la aterizare, lovind tot din rază (inclusiv jucătorul) și distrugând obstacolele distructibile. **GDD:** cap. 7, Bombe.
-- [ ] **M2-05 Obstacole distructibile:** `DestructibleObstacle` (dispare la explozie). Obstacolele normale blochează mișcarea și proiectilele.
+- [ ] **M2-01 Atacul melee:** RMB, arc de ~120° spre aim, rază scurtă, ~3× damage-ul unui proiectil, knockback, cooldown ~0,8 s, separat de ranged. *Gata când:* lovește doar inamicii din arc, îi împinge, cooldown-ul se respectă, ranged și melee pot fi alternate. **GDD:** cap. 4, Atacul melee.
+- [ ] **M2-02 Moartea jucătorului și restart (provizoriu):** la 0 HP jocul se oprește și apare un ecran simplu „Ai murit — R pentru restart”. Tasta R există doar pe acest ecran provizoriu, care se înlocuiește în M4-07. *Gata când:* restart-ul readuce room-ul la starea inițială.
+- [ ] **M2-03 Inventar, potions, pickups automate:** `PlayerInventory` (deocamdată doar potions: max 3, inventar gol la start; coins vin în M4-02), `Pickup`. Q bea un potion: +2 HP, instant, fără încetinire. Cu HP plin nu se poate bea; apare un mic semnal vizual că n-a mers. *Gata când:* pickup-urile se iau la atingere doar dacă e loc, altfel rămân pe jos; potion-ul nu trece de HP maxim; teste EditMode pentru inventar. **GDD:** cap. 3, Healing și potions; Controale.
 - [ ] **M2-06 Inamicul Shooter:** păstrează distanța și trage proiectile lente spre jucător.
 - [ ] **M2-07 Inamicul Charger:** stă, „telegrafiază” (clipește ~0,5 s), apoi face charge în linie dreaptă; se oprește în pereți.
-- [ ] **M2-08 Inamicul Turret:** staționar, trage la intervale fixe într-un pattern simplu.
-- [ ] **M2-09 Hit stop și screen shake:** declanșate de melee și de explozii, prin evenimente. Intensitatea din config.
+- [ ] **M2-09 Hit stop și screen shake:** la lovitura melee (și la explozia bombei, dacă bombele intră), prin evenimente. Intensitatea din config. **GDD:** cap. 4, Hit feedback.
 
-Fiecare inamic: *Gata când* comportamentul e lizibil (jucătorul înțelege ce urmează să facă), valorile sunt în `EnemyConfig`, iar inamicul poate fi omorât cu ambele atacuri. **GDD:** cap. 5 (de scris).
+Fiecare inamic: *Gata când* comportamentul e lizibil (jucătorul înțelege ce urmează să facă), valorile sunt în `EnemyConfig`, iar inamicul poate fi omorât cu ambele atacuri. **GDD:** cap. 13 (MVP); cap. 5 e încă de scris.
 
-**Demo M2:** un room cu câte un inamic de fiecare tip, învins folosind toate atacurile.
+**Demo M2:** un room cu câte un Chaser, Shooter și Charger, învinși folosind ranged și melee.
 
 ---
 
 ## M3 · Dungeon
 
-Scop: un etaj generat, cu rooms conectate și explorare.
+Scop: un etaj generat, cu rooms conectate și explorare. În M3 etajul are start room și combat rooms; boss room, choice room și Forge se adaugă în M4.
+
+**Ținta imediată:** M2 + M3, adică un etaj jucabil.
 
 | ID | Task | Depinde de |
 |---|---|---|
 | M3-01 | Room și Door | M1-05 |
 | M3-02 | Generarea layout-ului (logică pură) | M0-04 |
 | M3-03 | Construirea etajului în scenă | M3-01, M3-02 |
-| M3-04 | Camera între rooms | M1-06, M3-01 |
+| M3-04 | Camera între rooms și în rooms mari | M1-06, M3-01 |
 | M3-05 | Template-uri de rooms | M3-01 |
 | M3-06 | Minimap | M3-03 |
 
 Paralel: M3-01 și M3-02 sunt independente; M3-05 se poate face de un designer imediat ce există M3-01.
 
-- [ ] **M3-01 Room și Door:** stările `Unvisited → Active → Cleared`, ușile se închid la intrare și se deschid când moare ultimul inamic, drop la final. **GDD:** cap. 2, Bucla unui room.
-- [ ] **M3-02 Generarea layout-ului:** `FloorLayoutGenerator` cu seed. *Gata când:* teste EditMode: toate rooms accesibile din start, exact un start room și un boss room (cel mai departe de start), un choice room și un Forge, același seed dă același layout. **GDD:** cap. 2, Structura unui etaj.
-- [ ] **M3-03 Construirea etajului:** `FloorBuilder` instanțiază template-uri și le leagă ușile. *Gata când:* la fiecare Play apare un etaj diferit, toate ușile duc unde trebuie.
-- [ ] **M3-04 Camera între rooms:** tranziție lină la intrarea într-un room nou; înlocuiește logica bazată pe tag-uri.
-- [ ] **M3-05 Template-uri de rooms:** ~15 prefabs (mărimi și forme diferite, obstacole, puncte de spawn). Ghid scurt pentru cine face rooms noi. **GDD:** cap. 8 (de scris).
-- [ ] **M3-06 Minimap:** arată rooms vizitate, room-ul curent și vecinii văzuți.
+- [ ] **M3-01 Room și Door:** stările `Unvisited → Active → Cleared`; ușile unui combat room se închid la intrare și se deschid când moare ultimul inamic; rooms curățate rămân sigure. La curățare room-ul poate lăsa un drop (în M3: potion, cu șansă din config; coins se adaugă în M4-02). **GDD:** cap. 2, Bucla unui room.
+- [ ] **M3-02 Generarea layout-ului:** `FloorLayoutGenerator` cu seed, pe grid. Rooms ocupă 1×1, 2×1, 1×2 sau 2×2 celule. În M3: un start room și combat rooms (tipurile Boss, Choice, Forge vin în M4). *Gata când:* teste EditMode: toate rooms accesibile din start, exact un start room, rooms nu se suprapun, ușile leagă doar rooms vecine, același seed dă același layout. **GDD:** cap. 2, Structura unui etaj.
+- [ ] **M3-03 Construirea etajului:** `FloorBuilder` instanțiază template-uri potrivite ca mărime și le leagă ușile. *Gata când:* la fiecare Play apare un etaj diferit, toate ușile duc unde trebuie.
+- [ ] **M3-04 Camera între rooms și în rooms mari:** tranziție lină la intrarea într-un room nou; în rooms mai mari decât ecranul, camera urmărește jucătorul în limitele room-ului. Înlocuiește logica veche bazată pe tag-uri. **GDD:** cap. 1, Camera.
+- [ ] **M3-05 Template-uri de rooms:** ~15 prefabs, în toate cele 4 mărimi, cu obstacole și puncte de spawn. Design-ul rooms depinde de bombe (vezi **De decis**), deci decizia vine înainte de setul final. Ghid scurt pentru cine face rooms noi. **GDD:** cap. 8 (de scris).
+- [ ] **M3-06 Minimap:** arată rooms vizitate, room-ul curent și vecinii descoperiți. **GDD:** cap. 2.
 
 **Demo M3:** un etaj complet explorabil, cu inamici în fiecare combat room.
 
@@ -175,32 +156,51 @@ Paralel: M3-01 și M3-02 sunt independente; M3-05 se poate face de un designer i
 
 ## M4 · Run complet
 
-Scop: de la main menu la final de run, 3 etaje.
+Scop: de la main menu la final de run: 3 etaje cu boss, scară, items și economie.
 
 | ID | Task | Depinde de |
 |---|---|---|
-| M4-01 | RunManager și 3 etaje | M3-03 |
+| M4-01 | RunManager, 3 etaje și scara | M3-03 |
 | M4-02 | Coins și drop-uri | M2-03, M3-01 |
 | M4-03 | Items pasive și PlayerStats | M2-03 |
 | M4-04 | Choice room | M4-03 |
 | M4-05 | Forge | M4-02, M4-03 |
 | M4-06 | HUD | M2-03 |
 | M4-07 | Main menu, pauză, final de run | M4-01 |
-| M4-08 | Boss (opțional) | M2 |
+| M4-08 | Boss | M3-03 |
 
-- [ ] **M4-01 RunManager și 3 etaje:** trecerea la etajul următor după boss room; dificultatea crește pe etaje. **GDD:** cap. 2, Structura unui run.
-- [ ] **M4-02 Coins și drop-uri:** drop la curățarea unui room și din inamici, după config.
-- [ ] **M4-03 Items pasive și PlayerStats:** `ItemDefinition`, `StatModifier`, 10–15 items simple (damage, fire rate, viteză, HP maxim, bătaie...). Teste EditMode pentru stats.
-- [ ] **M4-04 Choice room:** 3 items, alegi unul cu F, celelalte dispar.
-- [ ] **M4-05 Forge:** upgrades pentru ranged și melee + potions/bombe, plătite cu coins, cumpărate cu F.
-- [ ] **M4-06 HUD:** HP segmentat, potions, bombe, coins, prompt-ul de interacțiune.
-- [ ] **M4-07 Main menu, pauză, final de run:** start run, pauză cu Esc, ecran de final (moarte / victorie) cu restart.
-- [ ] **M4-08 Boss (opțional):** dacă nu e timp, ultimul room al etajului e un room de luptă mai greu. **GDD:** cap. 6.
+Paralel: M4-02 / M4-03 / M4-06 / M4-08 sunt independente.
+
+- [ ] **M4-01 RunManager, 3 etaje și scara:** etajul se termină când ai învins boss-ul sau ai curățat toate combat rooms; atunci apare scara spre etajul următor, folosită cu F (cu prompt). După etajul 3: victorie. HP-ul, potions, coins și items se păstrează între etaje. Fără creștere de dificultate în MVP. **GDD:** cap. 2, Structura unui run.
+- [ ] **M4-02 Coins și drop-uri:** coins doar la curățarea unui room, nu din inamici; drop-urile după config. **GDD:** cap. 2, Bucla unui room.
+- [ ] **M4-03 Items pasive și PlayerStats:** `ItemDefinition`, `StatModifier`, 10–15 items pasive. Lista de items se decide întâi în GDD cap. 7. Teste EditMode pentru stats. **GDD:** cap. 3, Stats.
+- [ ] **M4-04 Choice room:** 3 items, alegi unul cu F, celelalte dispar; room garantat pe fiecare etaj. **GDD:** cap. 2.
+- [ ] **M4-05 Forge:** upgrades pentru ranged și melee + consumables, plătite cu coins, cumpărate cu F; room garantat pe fiecare etaj. Ce vinde exact se decide întâi în GDD cap. 7. **GDD:** cap. 2.
+- [ ] **M4-06 HUD:** HP ca bară segmentată, potions, coins, prompt-ul de interacțiune (și bombe, dacă intră). **GDD:** cap. 3.
+- [ ] **M4-07 Main menu, pauză, final de run:** minimal, doar cât să ne putem plimba între ecrane la playtest. Main menu: Play / Quit. Pauză (Esc): Resume / Main menu. Final de run: „Victorie” sau „Ai murit”, etajul atins, Restart / Main menu. Înlocuiește ecranul provizoriu din M2-02.
+- [ ] **M4-08 Boss:** boss room, de obicei în cel mai îndepărtat punct față de start. Design-ul boss-ului se face întâi în GDD cap. 6. **GDD:** cap. 2, cap. 6.
 
 **Demo M4 = MVP:** un run complet de 3 etaje, jucabil de la main menu până la ecranul de final.
 
 ---
 
+## De decis înainte de MVP
+
+- **Bombe (M2-04) și obstacole distructibile (M2-05):** intră sau nu în MVP. Trebuie decis înainte de setul final de template-uri (M3-05), pentru că design-ul rooms depinde de bombe. Dacă intră: design-ul din GDD cap. 7, iar explozia rănește și jucătorul (decis).
+- **Locul scării** când etajul se termină prin curățarea tuturor combat rooms, fără boss.
+
+---
+
 ## După MVP
 
-Ordinea din GDD cap. 13, Nice to have: meta-progression, Merchant, dash ca item, bosses pe fiecare etaj, rooms cu pressure plates, keybinds custom, setarea unghiului camerei, secret rooms, personaje noi, hub. Se detaliază în task-uri când ajungem acolo.
+Task-urile scoase din MVP (cu ID-ul păstrat) și ideile notate. Se detaliază în task-uri când ajungem la ele.
+
+**Scoase din MVP**
+- **M2-08 Inamicul Turret:** staționar.
+
+**Idei notate**
+- Mai multe tipuri de inamici.
+- Dificultatea pe etaje: **nu** prin multiplicator de HP pentru același inamic (ar fi ciudat ca același inamic să devină mai puternic). Modul exact e de decis.
+- Un item care îți dă un avantaj la run-ul următor.
+
+**Din GDD cap. 13, Nice to have:** meta-progression, Merchant, dash ca item, câte un boss pe fiecare etaj, rooms cu pressure plates, keybinds custom, setarea unghiului camerei, secret rooms, personaje noi, hub.

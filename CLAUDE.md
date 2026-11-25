@@ -4,7 +4,7 @@ Instructions for Claude (or any coding agent) working in this repo. Humans: see 
 
 ## The project
 
-University team project (Unity 6000.6.6f1, URP, 3D). A top-down twin-stick **roguelite dungeon crawler**: procedurally assembled floors of handmade rooms, doors lock until the room is cleared, mixed ranged + melee combat, items, 3 floors per run in the MVP. Placeholder art only (Unity primitives); the art team replaces visuals later.
+University team project (Unity 6000.6.6f1, URP, 3D). A top-down twin-stick **roguelite dungeon crawler**: procedurally assembled floors of handmade rooms, doors lock until the room is cleared, mixed ranged + melee combat, items, a boss per floor, 3 floors per run in the MVP. Scope details: FEATURE_PLAN. Placeholder art only (Unity primitives); the art team replaces visuals later.
 
 ## Read before coding
 

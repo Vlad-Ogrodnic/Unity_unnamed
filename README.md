@@ -4,7 +4,7 @@
 **Unity 6000.6.6f1**
 
 ## About the Game
-A 3D top-down isometric dungeon crawler where players explore interconnected rooms, defeat enemies, and solve puzzles to progress through the dungeon.
+A 3D top-down roguelite dungeon crawler (orthographic camera, twin-stick controls) where players explore procedurally assembled floors of handmade rooms and fight their way through enemies. Design: [docs/gdd/GDD.md](docs/gdd/GDD.md); plan: [docs/FEATURE_PLAN.md](docs/FEATURE_PLAN.md).
 
 ## Current Progress
 The camera system is functional but still under development and subject to further improvements.

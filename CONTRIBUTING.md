@@ -44,7 +44,7 @@ Rider sau VS Code funcționează și ele (pachetele de integrare sunt deja în p
 
 - **Un issue = un lucru livrabil.** Fiecare issue conține: descriere, **criterii de acceptare** („e gata când...”), link către secțiunea relevantă din GDD.
 - **Board** (GitHub Projects): `Backlog → To do → In progress → In review → Done`.
-- **Milestone = sprint.** Tabelul de obiective din raportul de sprint se scoate direct din milestone.
+- **Milestone pe GitHub = milestone din [FEATURE_PLAN](docs/FEATURE_PLAN.md)** (M0, M1, …), cu un issue per milestone. Tabelul de obiective din raportul de sprint se scoate din issues închise în sprintul respectiv.
 - **Labels:**
   - tip: `gameplay`, `systems`, `ui`, `art-hook`, `bug`, `tech-debt`, `docs`
   - prioritate: `P1` (blocant / esențial), `P2` (important), `P3` (nice to have)
