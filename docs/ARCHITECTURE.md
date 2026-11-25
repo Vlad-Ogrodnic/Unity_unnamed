@@ -50,6 +50,7 @@ Assets/_Game/
 ```
 
 - **Namespace = folder:** `Game.Core`, `Game.Player`, `Game.Combat` etc.
+- **Input:** `GameControls.cs` e generat automat din `Input/GameControls.inputactions` (în `Scripts/Runtime/Player/`, namespace `Game.Player`). Nu se editează de mână; se modifică asset-ul și Unity regenerează clasa.
 - **Un singur asmdef de runtime** (`Game.Runtime`). Pentru mărimea proiectului, mai multe asmdefs ar adăuga doar fricțiune; folderele și namespace-urile țin ordinea.
 - Codul vechi din `Assets/Scripts/` rămâne neatins până când echipa decide să-l înlocuiască.
 
@@ -77,6 +78,22 @@ Assets/_Game/
 
 Collision matrix: proiectilele jucătorului lovesc doar `Enemy` și `Obstacle`; cele ale inamicilor doar `Player` și `Obstacle`; `Pickup` și `Interactable` interacționează doar cu `Player`. Astfel nu există friendly fire și nu trebuie verificat în cod.
 
+Perechile care se ciocnesc (toate celelalte combinații între layers de mai sus sunt ignorate):
+
+| Layer | Se ciocnește cu |
+|---|---|
+| `Ground` | `Ground`, `Player`, `Enemy` |
+| `Obstacle` | `Player`, `Enemy`, `PlayerProjectile`, `EnemyProjectile` |
+| `Player` | `Ground`, `Obstacle`, `Enemy`, `EnemyProjectile`, `Pickup`, `Interactable`, `RoomTrigger` |
+| `Enemy` | `Ground`, `Obstacle`, `Player`, `Enemy`, `PlayerProjectile` |
+| `PlayerProjectile` | `Obstacle`, `Enemy` |
+| `EnemyProjectile` | `Obstacle`, `Player` |
+| `Pickup`, `Interactable`, `RoomTrigger` | `Player` |
+
+`Enemy` × `Enemy` e **provizoriu**: se decide în GDD cap. 5. Dacă unii inamici trebuie să treacă prin alții (de exemplu zburători), primesc un layer separat.
+
+Layers vechi (`Default` etc.) se ciocnesc doar cu `Ground`, `Obstacle`, `Player`, `Enemy`, ca obiectele vechi să rămână solide. Testul EditMode `CollisionMatrixTests` verifică matricea; dacă o schimbi intenționat, actualizează tabelul și testul.
+
 ---
 
 ## 4. Contracte de bază (`Game.Core`)
@@ -102,7 +119,8 @@ public interface IDamageable
 - **`Health`** (MonoBehaviour, implementează `IDamageable`): HP întreg, i-frames opționale, evenimente `Damaged(DamageInfo)`, `Healed(int)`, `Died`. Folosit atât de jucător, cât și de inamici. Valorile vin dintr-un config.
 - **`IAimProvider`**: `Vector3 AimDirection` (normalizat, pe XZ) și `Vector3 AimPoint` (punctul de pe podea). Jucătorul îl implementează cu mouse-ul; inamicii care trag pot avea propria implementare. Atacurile depind doar de această interfață, deci modul de țintire se poate schimba fără a atinge armele.
 - **`IInteractable`**: `string Prompt`, `bool CanInteract(PlayerContext)`, `void Interact(PlayerContext)`.
-- **Pooling:** proiectilele și efectele frecvente folosesc `UnityEngine.Pool.ObjectPool<T>`, ascuns în spatele unui mic `PrefabPool`.
+- **Pooling:** proiectilele și efectele frecvente folosesc `PrefabPool<T>` (peste `UnityEngine.Pool.ObjectPool<T>`). Cine creează pool-ul le dă instanțelor un callback de `Release`; instanțele nu știu de pool.
+- **`PlayerContext`**: ce poate accesa un `IInteractable` la jucător. Acum conține doar `GameObject`-ul jucătorului; inventarul și stats se adaugă când există (M2-03, M4-03).
 
 ---
 

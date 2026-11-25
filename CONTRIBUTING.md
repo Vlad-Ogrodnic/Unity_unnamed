@@ -88,6 +88,7 @@ Două reguli sunt obligatorii; restul sunt recomandări.
 - **Scenele sunt „subțiri”**: logica și conținutul stau în prefaburi; scena doar le pune împreună.
 - Fiecare programator lucrează într-o **scenă sandbox personală**: `Assets/_Game/Scenes/Sandbox/<Nume>.unity`.
   Acolo poți face orice; nimeni altcineva nu o modifică.
+  O creezi din meniul **Game → Create My Sandbox Scene** (copiază `Sandbox_Template.unity`).
 - **Scenele comune** (meniu, joc principal etc.) sunt modificate de **o singură persoană odată**.
   Anunță pe grup înainte să lucrezi pe o scenă comună și după ce ai dat push.
 - Nu salva o scenă comună dacă nu ai vrut să o modifici (Unity marchează scenele ca modificate foarte ușor — verifică `git status` și dă revert la ce nu ai vrut să schimbi).
@@ -119,10 +120,10 @@ Assets/
 ├── _Game/                  ← tot ce e al nostru
 │   ├── Scripts/
 │   │   ├── Runtime/        ← Game.Runtime.asmdef
-│   │   └── Editor/         ← Game.Editor.asmdef (unelte de editor)
-│   ├── Tests/
-│   │   ├── EditMode/
-│   │   └── PlayMode/
+│   │   ├── Editor/         ← Game.Editor.asmdef (unelte de editor)
+│   │   └── Tests/
+│   │       ├── EditMode/   ← Game.Tests.EditMode.asmdef
+│   │       └── PlayMode/   ← Game.Tests.PlayMode.asmdef
 │   ├── Prefabs/
 │   ├── Data/               ← ScriptableObject-uri (statistici, item-e, inamici)
 │   ├── Materials/          ← materiale placeholder
