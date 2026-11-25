@@ -129,11 +129,13 @@ public interface IDamageable
 
 ## 5. Sistemele
 
+Secțiunea descrie și sisteme care vin **după MVP** sau care sunt **încă nedecise** (marcate așa), ca să fie clar unde vor sta; nu se implementează înainte de task-ul lor din [FEATURE_PLAN.md](FEATURE_PLAN.md).
+
 ### Player
 - `PlayerInputReader`: singurul loc care citește Input System. Expune valori (`Move`, `AimScreenPosition`) și evenimente (`MeleePressed`, `BombPressed/Released`, `PotionPressed`, `InteractPressed`). Restul componentelor nu știu de Input System.
 - `PlayerMovement`: mișcare pe Rigidbody (velocity, interpolare), viteza din `PlayerConfig`.
 - `PlayerAim` (`IAimProvider`): raycast de la mouse pe planul podelei. Primește camera prin Inspector sau `SetCamera` (de la cine creează jucătorul).
-- `PlayerInventory`: coins, potions, bombe, cu limite și evenimente `Changed`.
+- `PlayerInventory`: potions (max 3), cu limite și eveniment `Changed`. Coins se adaugă în M4-02; bombele doar dacă intră în MVP.
 - `PlayerInteractor`: găsește cel mai apropiat `IInteractable`, afișează prompt-ul, apelează `Interact` la F.
 - `PlayerStats`: valorile curente (damage, fire rate, viteză...) = config de bază + modificatori de la items/Forge.
 
@@ -141,34 +143,35 @@ public interface IDamageable
 - `RangedAttack`: trage cât timp `TriggerHeld` e true, după rata de tragere din config (mai târziu din stats); ia proiectile din pool. Nu știe de input: la jucător, `PlayerAttackInput` leagă input-ul de atacuri; un inamic care trage va seta singur `TriggerHeld`.
 - `Projectile`: se mișcă singur, verifică coliziunea cu `SphereCast` în direcția mișcării (sigur la viteze mari), lovește primul `IDamageable` sau dispare la obstacol / la bătaia maximă. Ce poate lovi vine din collision matrix pentru layer-ul lui (`PlayerProjectile` / `EnemyProjectile`). Valorile (damage, viteză, bătaie) vin ca `ProjectileStats`, construite de atac.
 - `MeleeAttack`: arc în fața aim-ului (`OverlapSphere` + filtru de unghi), damage + knockback, cooldown propriu.
-- `BombThrower` + `Bomb`: cerc de aterizare cât e ținută tasta; zbor în arc calculat (lerp pe XZ + parabolă pe Y), umbră pe podea, explozie cu `OverlapSphere` care lovește `IDamageable` și distruge `DestructibleObstacle`.
+- `BombThrower` + `Bomb` (de decis dacă intră în MVP): cerc de aterizare cât e ținută tasta; zbor în arc calculat (lerp pe XZ + parabolă pe Y), umbră pe podea, explozie cu `OverlapSphere` care lovește `IDamageable` și distruge `DestructibleObstacle`.
 
 ### Enemies
-- Fiecare inamic: `Health` + `ContactDamage` + **un** component de comportament (`ChaserBehaviour`, `ShooterBehaviour`, `ChargerBehaviour`, `TurretBehaviour`) + `EnemyConfig`.
+- Fiecare inamic: `Health` + `ContactDamage` + **un** component de comportament (`ChaserBehaviour`, `ShooterBehaviour`, `ChargerBehaviour`; `TurretBehaviour` după MVP) + `EnemyConfig`.
 - Comportamentele sunt mașini de stări mici, scrise direct în cod (enum + switch). Fără NavMesh în MVP: rooms sunt mici, mișcarea directă spre jucător + ocolire simplă e suficientă.
 - Inamicul nu își caută singur ținta: `Room` îi dă referința la jucător când îl activează.
 
 ### Rooms și Dungeon
 - `Room`: bounds (pentru cameră), lista de uși, punctele de spawn, starea (`Unvisited → Active → Cleared`), evenimentele `PlayerEntered`, `Cleared`. Când jucătorul intră într-un room necurățat: închide ușile, activează inamicii; când moare ultimul: deschide ușile, dă drop-ul.
 - `Door`: deschis / închis, direcția (N/E/S/W), legătura cu room-ul vecin.
-- `FloorLayoutGenerator` (C# pur, seed explicit, `System.Random`): produce un `FloorLayout` = grid de celule cu tipul room-ului (Start, Combat, Choice, Forge, Boss) și conexiunile. Are teste EditMode (toate rooms accesibile, exact un start și un boss room, determinism pe același seed).
-- `FloorBuilder`: transformă `FloorLayout` în scenă, alegând template-uri de rooms potrivite (prefabs cu `Room`).
+- `FloorLayoutGenerator` (C# pur, seed explicit, `System.Random`): produce un `FloorLayout` = grid de celule; fiecare room ocupă 1×1, 2×1, 1×2 sau 2×2 celule și are un tip, plus conexiunile dintre rooms vecine. Tipuri: Start, Combat, Boss, Choice, Forge (în M3 doar Start și Combat; restul în M4). Are teste EditMode (toate rooms accesibile, exact un start room, fără suprapuneri, determinism pe același seed).
+- `FloorBuilder`: transformă `FloorLayout` în scenă, alegând template-uri de rooms de mărimea potrivită (prefabs cu `Room`).
 
 ### Camera
 - `RoomCameraRig`: camera orthographic la unghiul din config. Când jucătorul intră într-un room, calculează mărimea orthographic și poziția din bounds-ul room-ului și face tranziția.
 - Calculul încadrării e o funcție pură (`CameraFraming.Compute(playArea, roomArea, pitch, aspect, distance)`), cu teste. Regula: podeaua pe care se poate merge (`playArea`) se vede mereu toată; în rest room-ul cu tot cu pereți (`roomArea`) umple ecranul, deci se taie doar marginea exterioară a pereților. Fundalul apare doar când forma ecranului nu permite ambele (de exemplu 4:3).
 - Rig-ul recalculează în fiecare frame, deci unghiul din `CameraConfig` și redimensionarea ferestrei se aplică pe loc. Până la M3-01, room-ul inițial se dă prin două collidere în scenă (`PlayArea` și `Floor`).
+- În rooms mai mari decât ecranul (2×1, 1×2, 2×2), camera urmărește jucătorul în limitele room-ului (M3-04).
 
 ### Items, economie, run
 - `ItemDefinition` (ScriptableObject): nume, descriere, raritate, listă de `StatModifier`. Efectele mai speciale se adaugă abia când apar în listă.
 - `Pickup`: se ia automat la atingere dacă inventarul are loc; altfel rămâne pe jos.
-- `RunManager`: etajul curent, seed-ul run-ului, trecerea la etajul următor, final de run (moarte / victorie). Un singur obiect în scena `Game`; alte sisteme primesc de la el ce le trebuie, nu îl caută.
+- `RunManager`: etajul curent, seed-ul run-ului, trecerea la etajul următor, final de run (moarte / victorie). Un etaj e terminat când boss-ul e învins sau toate combat rooms sunt curățate; atunci apare scara (un `IInteractable`). Un singur obiect în scena `Game`; alte sisteme primesc de la el ce le trebuie, nu îl caută.
 
 ---
 
 ## 6. Feedback și UI
 
-- Feedback-ul (hit flash, hit stop, screen shake, sunete) **ascultă evenimente** (`Health.Damaged`, `Bomb.Exploded`). Gameplay-ul nu apelează direct efecte.
+- Feedback-ul (hit flash, hit stop, screen shake, sunete) **ascultă evenimente** (`Health.Damaged`, lovitura melee, `Bomb.Exploded` dacă bombele intră). Gameplay-ul nu apelează direct efecte.
 - `HitFlash` stă pe `Visual` și face flash alb când `Health` de pe root anunță damage. Așa, echipa de artă poate schimba grafica fără să atingă logica.
 - UI-ul se abonează la evenimente (`PlayerInventory.Changed`, `Health.Damaged`) și nu modifică starea jocului.
 
