@@ -10,6 +10,27 @@ Lista de lucru pentru MVP, împărțită pe milestones, în ordinea din GDD cap.
 
 **Status:** `[ ]` de făcut · `[~]` în lucru · `[x]` gata. Când trecem pe GitHub Issues, statusul se ține acolo, iar aici rămâne doar lista.
 
+## Issues pe GitHub
+
+Un issue acoperă un **sistem întreg** (mai multe task-uri de mai jos); task-urile apar ca checklist în issue. Fiecare issue corespunde în mare unui folder din ARCHITECTURE, ca oamenii care lucrează în paralel să nu modifice aceleași fișiere.
+
+| # | Issue | Task-uri | Milestone |
+|---|---|---|---|
+| 1 | Fundația proiectului | M0-01…05 | M0 |
+| 2 | Player: input, mișcare, aim | M1-01, M1-02 | M1 |
+| 3 | Health, damage și atacul ranged | M1-03, M1-04 | M1 |
+| 4 | Camera orthographic | M1-06, M3-04 | M1 |
+| 5 | Inamici: Chaser, Shooter, Charger, Turret | M1-05, M2-06…08 | M1–M2 |
+| 6 | Kit de luptă: melee, bombe, obstacole distructibile | M2-01, M2-04, M2-05 | M2 |
+| 7 | Inventar, potions, pickups, moarte și restart | M2-02, M2-03 | M2 |
+| 8 | Hit feedback: flash, hit stop, screen shake | M2-09 | M2 |
+| 9 | Rooms și uși + template-uri | M3-01, M3-05 | M3 |
+| 10 | Generarea etajului + minimap | M3-02, M3-03, M3-06 | M3 |
+| 11 | Items și economie: stats, coins, choice room, Forge | M4-02…05 | M4 |
+| 12 | Run complet: RunManager, 3 etaje, HUD, meniuri (+ boss opțional) | M4-01, M4-06…08 | M4 |
+
+Issues se creează pe GitHub pe măsură ce ajungem la milestone-ul lor. Numerele din tabel sunt orientative; contează numărul real de pe GitHub.
+
 **Paralelizare:** în fiecare milestone, task-urile fără dependențe între ele pot fi luate de oameni diferiți. Sunt marcate în tabelul de la începutul fiecărui milestone.
 
 ---
@@ -26,24 +47,24 @@ Scop: o bază curată pe care pot lucra mai mulți oameni fără conflicte. Rapi
 | M0-04 | Contractele de bază (`Game.Core`) | M0-01 |
 | M0-05 | Scena sandbox și materialele placeholder | M0-01 |
 
-- [ ] **M0-01 Structura de foldere și asmdefs**
+- [x] **M0-01 Structura de foldere și asmdefs**
   Creează `Assets/_Game/` conform ARCHITECTURE §2, cu `Game.Runtime`, `Game.Editor`, `Game.Tests.EditMode`, `Game.Tests.PlayMode`.
   *Gata când:* proiectul compilează; un test EditMode gol rulează și trece. Codul vechi din `Assets/Scripts/` nu e modificat.
 
-- [ ] **M0-02 Input System: acțiunile jocului**
+- [x] **M0-02 Input System: acțiunile jocului**
   `GameControls.inputactions` cu action map-ul `Gameplay`: Move (WASD), Aim (poziția mouse-ului), Fire (LMB, ținut), Melee (RMB), Bomb (E, apăsat/eliberat), Potion (Q), Interact (F), Dash (Space), Pause (Esc). Clasa C# generată.
   *Gata când:* acțiunile există și pot fi citite dintr-un script de test. **GDD:** cap. 3, Controale.
   *Notă:* setarea `activeInputHandler` rămâne pe „Both” cât timp codul vechi mai folosește `Input.GetAxis`.
 
-- [ ] **M0-03 Layers și collision matrix**
+- [x] **M0-03 Layers și collision matrix**
   Layers și matricea din ARCHITECTURE §3.
   *Gata când:* layers există, matricea e setată conform tabelului.
 
-- [ ] **M0-04 Contractele de bază**
+- [x] **M0-04 Contractele de bază**
   `Team`, `DamageInfo`, `IDamageable`, `IAimProvider`, `IInteractable`, `PrefabPool`.
   *Gata când:* compilează; teste EditMode pentru `PrefabPool` (ia/returnează obiecte).
 
-- [ ] **M0-05 Scena sandbox și materialele placeholder**
+- [x] **M0-05 Scena sandbox și materialele placeholder**
   `Scenes/Sandbox/Sandbox_Template.unity`: podea, câțiva pereți, lumină, camera. Materiale simple: jucător, inamic, proiectil jucător, proiectil inamic, obstacol, pickup.
   *Gata când:* scena se deschide și arată un room gol; fiecare programator își poate face o copie.
 

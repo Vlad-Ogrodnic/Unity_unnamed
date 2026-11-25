@@ -14,14 +14,14 @@ TagManager:
   - Ground
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Obstacle
+  - Player
+  - Enemy
+  - PlayerProjectile
+  - EnemyProjectile
+  - Pickup
+  - Interactable
+  - RoomTrigger
   - 
   - 
   - 
