@@ -112,3 +112,8 @@ InitTestScene*.unity*
 
 # Auto-generated cache in Assets folder
 /[Aa]ssets/[Ss]ceneDependencyCache*
+
+# Local-only GDD notes (rejected alternatives archive)
+/docs/gdd/GDD_alternative.md
+# Local HTML draft used to paste into the Google Doc (the repo keeps GDD.md)
+/docs/gdd/GDD.html
