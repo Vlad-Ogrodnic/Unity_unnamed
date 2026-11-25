@@ -9,7 +9,7 @@ namespace Game.Enemies
     /// Charge in a straight line until it hits a wall or obstacle → Recover → Wait.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
-    public sealed class ChargerBehaviour : MonoBehaviour
+    public sealed class ChargerBehaviour : MonoBehaviour, IEnemyBehaviour
     {
         private enum State
         {

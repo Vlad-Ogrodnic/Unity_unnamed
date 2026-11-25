@@ -143,14 +143,14 @@ Scop: un etaj generat, cu rooms conectate și explorare. În M3 etajul are start
 
 Paralel: M3-01 și M3-02 sunt independente; M3-05 se poate face de un designer imediat ce există M3-01.
 
-- [ ] **M3-01 Room și Door:** stările `Unvisited → Active → Cleared`; ușile unui combat room se închid la intrare și se deschid când moare ultimul inamic; rooms curățate rămân sigure. La curățare room-ul poate lăsa un drop (în M3: potion, cu șansă din config; coins se adaugă în M4-02). **GDD:** cap. 2, Bucla unui room.
-- [ ] **M3-02 Generarea layout-ului:** `FloorLayoutGenerator` cu seed, pe grid. Rooms ocupă 1×1, 2×1, 1×2 sau 2×2 celule. În M3: un start room și combat rooms (tipurile Boss, Choice, Forge vin în M4). *Gata când:* teste EditMode: toate rooms accesibile din start, exact un start room, rooms nu se suprapun, ușile leagă doar rooms vecine, același seed dă același layout. **GDD:** cap. 2, Structura unui etaj.
-- [ ] **M3-03 Construirea etajului:** `FloorBuilder` instanțiază template-uri potrivite ca mărime și le leagă ușile. *Gata când:* la fiecare Play apare un etaj diferit, toate ușile duc unde trebuie.
-- [ ] **M3-04 Camera între rooms și în rooms mari:** tranziție lină la intrarea într-un room nou; în rooms mai mari decât ecranul, camera urmărește jucătorul în limitele room-ului. Înlocuiește logica veche bazată pe tag-uri. **GDD:** cap. 1, Camera.
-- [ ] **M3-05 Template-uri de rooms:** ~15 prefabs, în toate cele 4 mărimi, cu obstacole și puncte de spawn. Design-ul rooms depinde de bombe (vezi **De decis**), deci decizia vine înainte de setul final. Ghid scurt pentru cine face rooms noi. **GDD:** cap. 8 (de scris).
-- [ ] **M3-06 Minimap:** arată rooms vizitate, room-ul curent și vecinii descoperiți. **GDD:** cap. 2.
+- [x] **M3-01 Room și Door:** stările `Unvisited → Active → Cleared`; ușile unui combat room se închid la intrare și se deschid când moare ultimul inamic; rooms curățate rămân sigure. La curățare room-ul poate lăsa un drop (în M3: potion, cu șansă din config; coins se adaugă în M4-02). **GDD:** cap. 2, Bucla unui room.
+- [x] **M3-02 Generarea layout-ului:** `FloorLayoutGenerator` cu seed, pe grid. Rooms ocupă 1×1, 2×1, 1×2 sau 2×2 celule. În M3: un start room și combat rooms (tipurile Boss, Choice, Forge vin în M4). *Gata când:* teste EditMode: toate rooms accesibile din start, exact un start room, rooms nu se suprapun, ușile leagă doar rooms vecine, același seed dă același layout. **GDD:** cap. 2, Structura unui etaj.
+- [x] **M3-03 Construirea etajului:** `FloorBuilder` instanțiază template-uri potrivite ca mărime și le leagă ușile. *Gata când:* la fiecare Play apare un etaj diferit, toate ușile duc unde trebuie.
+- [x] **M3-04 Camera între rooms și în rooms mari:** tranziție lină la intrarea într-un room nou; în rooms mai mari decât ecranul, camera urmărește jucătorul în limitele room-ului. Înlocuiește logica veche bazată pe tag-uri. **GDD:** cap. 1, Camera.
+- [~] **M3-05 Template-uri de rooms:** ~15 prefabs, în toate cele 4 mărimi, cu obstacole și puncte de spawn. Rooms se descriu ca text în `Data/RoomLayouts/` (format și reguli în README-ul de acolo) și se construiesc cu **Game → Rooms → Rebuild Room Prefabs**. Primul set: 7 rooms de luptă (1×1, 2×1, 2×2), doar cu obstacole fixe, plus un start room; scena `Sandbox_M3_Rooms` le leagă într-o buclă, ca să poată fi jucate pe rând. **Deocamdată setul ăsta ajunge** (decizie de design); restul până la ~15 se face mai târziu. Design-ul rooms depinde de bombe (vezi **De decis**), deci decizia vine înainte de setul final. Ghid scurt pentru cine face rooms noi. **GDD:** cap. 8 (de scris).
+- [x] **M3-06 Minimap:** arată rooms vizitate, room-ul curent și vecinii descoperiți. **GDD:** cap. 2.
 
-**Demo M3:** un etaj complet explorabil, cu inamici în fiecare combat room.
+**Demo M3:** un etaj complet explorabil, cu inamici în fiecare combat room. Scena: `Sandbox_M3_Floor` (alt etaj la fiecare Play; un seed fix se pune în `FloorGenerationConfig`).
 
 ---
 
@@ -181,6 +181,13 @@ Paralel: M4-02 / M4-03 / M4-06 / M4-08 sunt independente.
 - [ ] **M4-08 Boss:** boss room, de obicei în cel mai îndepărtat punct față de start. Design-ul boss-ului se face întâi în GDD cap. 6. **GDD:** cap. 2, cap. 6.
 
 **Demo M4 = MVP:** un run complet de 3 etaje, jucabil de la main menu până la ecranul de final.
+
+---
+
+## Observații din playtest
+
+- **Game feel (după M3):** lupta se simte mai mult ca un arena / horde shooter decât ca un dungeon crawler cu rooms. Suspect principal: aim-ul liber la 360° cu mouse-ul, dar vrem să rezolvăm **fără** să limităm aim-ul. Pârghii posibile, de încercat la playtest: viteza și bătaia proiectilelor, viteza jucătorului, numărul de inamici pe room și cât de „deliberate” sunt atacurile lor, pattern-uri de proiectile inamice care cer mișcare, knockback, mărimea rooms. De revăzut mai târziu.
+  - Idee de încercat: inamici care trag și în alte direcții decât direct spre jucător (de exemplu în jurul lor), ca lupta să se apropie de un bullet hell ușor. Doar idee, nu se implementează acum.
 
 ---
 

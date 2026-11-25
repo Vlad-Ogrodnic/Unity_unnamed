@@ -9,7 +9,7 @@ namespace Game.Enemies
     /// It is also the aim source for its own <see cref="RangedAttack"/>.
     /// </summary>
     [RequireComponent(typeof(Rigidbody))]
-    public sealed class ShooterBehaviour : MonoBehaviour, IAimProvider
+    public sealed class ShooterBehaviour : MonoBehaviour, IAimProvider, IEnemyBehaviour
     {
         private enum State
         {
