@@ -113,12 +113,12 @@ Scop: kit-ul de luptă al jucătorului din MVP și cele 3 tipuri de inamici, în
 
 Paralel: melee / inventar / inamici / feedback sunt independente. (M2-04 și M2-05 sunt la **De decis**, M2-08 în **După MVP**.)
 
-- [ ] **M2-01 Atacul melee:** RMB, arc de ~120° spre aim, rază scurtă, ~3× damage-ul unui proiectil, knockback, cooldown ~0,8 s, separat de ranged. *Gata când:* lovește doar inamicii din arc, îi împinge, cooldown-ul se respectă, ranged și melee pot fi alternate. **GDD:** cap. 4, Atacul melee.
-- [ ] **M2-02 Moartea jucătorului și restart (provizoriu):** la 0 HP jocul se oprește și apare un ecran simplu „Ai murit — R pentru restart”. Tasta R există doar pe acest ecran provizoriu, care se înlocuiește în M4-07. *Gata când:* restart-ul readuce room-ul la starea inițială.
-- [ ] **M2-03 Inventar, potions, pickups automate:** `PlayerInventory` (deocamdată doar potions: max 3, inventar gol la start; coins vin în M4-02), `Pickup`. Q bea un potion: +2 HP, instant, fără încetinire. Cu HP plin nu se poate bea; apare un mic semnal vizual că n-a mers. *Gata când:* pickup-urile se iau la atingere doar dacă e loc, altfel rămân pe jos; potion-ul nu trece de HP maxim; teste EditMode pentru inventar. **GDD:** cap. 3, Healing și potions; Controale.
-- [ ] **M2-06 Inamicul Shooter:** păstrează distanța și trage proiectile lente spre jucător.
-- [ ] **M2-07 Inamicul Charger:** stă, „telegrafiază” (clipește ~0,5 s), apoi face charge în linie dreaptă; se oprește în pereți.
-- [ ] **M2-09 Hit stop și screen shake:** la lovitura melee (și la explozia bombei, dacă bombele intră), prin evenimente. Intensitatea din config. **GDD:** cap. 4, Hit feedback.
+- [x] **M2-01 Atacul melee:** RMB, arc de ~90° spre aim (GDD: ~120°, redus după primul playtest), rază scurtă, ~3× damage-ul unui proiectil, knockback, cooldown ~0,8 s, separat de ranged. *Gata când:* lovește doar inamicii din arc, îi împinge, cooldown-ul se respectă, ranged și melee pot fi alternate. **GDD:** cap. 4, Atacul melee.
+- [x] **M2-02 Moartea jucătorului și restart (provizoriu):** la 0 HP jocul se oprește și apare un ecran simplu „Ai murit — R pentru restart”. Tasta R există doar pe acest ecran provizoriu, care se înlocuiește în M4-07. *Gata când:* restart-ul readuce room-ul la starea inițială.
+- [x] **M2-03 Inventar, potions, pickups automate:** `PlayerInventory` (deocamdată doar potions: max 3, inventar gol la start; coins vin în M4-02), `Pickup`. Q bea un potion: +2 HP, instant, fără încetinire. Cu HP plin nu se poate bea; apare un mic semnal vizual că n-a mers. *Gata când:* pickup-urile se iau la atingere doar dacă e loc, altfel rămân pe jos; potion-ul nu trece de HP maxim; teste EditMode pentru inventar. **GDD:** cap. 3, Healing și potions; Controale.
+- [x] **M2-06 Inamicul Shooter:** păstrează distanța și trage proiectile lente spre jucător.
+- [x] **M2-07 Inamicul Charger:** stă, „telegrafiază” (clipește ~0,5 s, iar o săgeată pe podea arată direcția), apoi face charge în linie dreaptă; se oprește în pereți.
+- [x] **M2-09 Hit stop și screen shake:** la lovitura melee (și la explozia bombei, dacă bombele intră), prin evenimente. Intensitatea din config. **GDD:** cap. 4, Hit feedback.
 
 Fiecare inamic: *Gata când* comportamentul e lizibil (jucătorul înțelege ce urmează să facă), valorile sunt în `EnemyConfig`, iar inamicul poate fi omorât cu ambele atacuri. **GDD:** cap. 13 (MVP); cap. 5 e încă de scris.
 

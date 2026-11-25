@@ -38,6 +38,7 @@ namespace Game.Tests.EditMode
         [TestCase("Interact")]
         [TestCase("Dash")]
         [TestCase("Pause")]
+        [TestCase("Restart")]
         public void GameplayMap_HasAction(string actionName)
         {
             Assert.That(_controls.Gameplay.Get().FindAction(actionName), Is.Not.Null);
@@ -101,6 +102,7 @@ namespace Game.Tests.EditMode
             AssertTriggers(_keyboard.fKey, _controls.Gameplay.Interact);
             AssertTriggers(_keyboard.spaceKey, _controls.Gameplay.Dash);
             AssertTriggers(_keyboard.escapeKey, _controls.Gameplay.Pause);
+            AssertTriggers(_keyboard.rKey, _controls.Gameplay.Restart);
         }
 
         private void AssertTriggers(UnityEngine.InputSystem.Controls.ButtonControl button, InputAction action)
