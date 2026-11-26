@@ -218,7 +218,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1369498149}
-        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Game.Runtime
         m_MethodName: ShowMainMenu
         m_Mode: 1
         m_Arguments:
@@ -629,7 +629,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1378882491}
-        m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.SettingsController, Game.Runtime
         m_MethodName: ShowAudio
         m_Mode: 1
         m_Arguments:
@@ -1289,7 +1289,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1369498149}
-        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Game.Runtime
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -2132,7 +2132,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1369498149}
-        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Game.Runtime
         m_MethodName: ShowSettings
         m_Mode: 1
         m_Arguments:
@@ -2375,7 +2375,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1378882491}
-        m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.SettingsController, Game.Runtime
         m_MethodName: ShowControls
         m_Mode: 1
         m_Arguments:
@@ -2738,7 +2738,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1378882491}
-        m_TargetAssemblyTypeName: SettingsController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.SettingsController, Game.Runtime
         m_MethodName: ShowGraphics
         m_Mode: 1
         m_Arguments:
@@ -3158,7 +3158,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1369498149}
-        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Game.Runtime
         m_MethodName: ShowLoadGame
         m_Mode: 1
         m_Arguments:
@@ -3464,7 +3464,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1369498149}
-        m_TargetAssemblyTypeName: MainMenuController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Game.UI.MainMenuController, Game.Runtime
         m_MethodName: ShowMainMenu
         m_Mode: 1
         m_Arguments:
