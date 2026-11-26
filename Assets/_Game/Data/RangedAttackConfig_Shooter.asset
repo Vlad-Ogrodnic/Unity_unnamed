@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eb4b83f935630e4db02f4b8fb2269d7, type: 3}
+  m_Name: RangedAttackConfig_Shooter
+  m_EditorClassIdentifier: Game.Runtime::Game.Combat.RangedAttackConfig
+  _projectilePrefab: {fileID: 6291124049597820626, guid: f6b0783e8a9392c4991e0534f50780f7, type: 3}
+  _fireRate: 0.7
+  _damage: 1
+  _projectileSpeed: 6
+  _range: 14
+  _projectileRadius: 0.2
+  _knockbackForce: 0
+  _spawnHeight: 0.5
+  _spawnOffset: 0.6
