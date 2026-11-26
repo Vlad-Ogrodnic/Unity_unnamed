@@ -158,6 +158,7 @@ Packages/packages-lock.json linguist-generated
 
 # Documents
 *.pdf                   lfs
+Rapoarte_Sprint/**/*.pdf !lfs !filter !diff !merge !text
 
 # ETC
 *.a                     lfs
